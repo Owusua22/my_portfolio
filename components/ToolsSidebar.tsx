@@ -53,7 +53,7 @@ const toolIcons = [
 
 export default function ToolsSidebar() {
   return (
-    <aside className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-3">
+    <aside className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-16">
       {toolIcons.map((icon, index) => (
         <div
           key={icon.name}

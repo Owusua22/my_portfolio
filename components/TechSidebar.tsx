@@ -53,7 +53,7 @@ const techIcons = [
 
 export default function TechSidebar() {
   return (
-    <aside className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-3">
+    <aside className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-16">
       {techIcons.map((icon, index) => (
         <div
           key={icon.name}
