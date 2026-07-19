@@ -80,28 +80,7 @@ const experiences: ExperienceItem[] = [
     color: "indigo",
     tagline:
       "Leading cross-functional engineering teams to deliver scalable web and mobile products.",
-    achievements: [
-      {
-        metric: "40–60%",
-        label: "Performance improvement",
-        color: "indigo",
-      },
-      {
-        metric: "50%",
-        label: "Faster deployments",
-        color: "purple",
-      },
-      {
-        metric: "4–8",
-        label: "Team members led",
-        color: "cyan",
-      },
-      {
-        metric: "1",
-        label: "Mobile app launched",
-        color: "emerald",
-      },
-    ],
+    
     description: [
       "Led a cross-functional team of 4–8 developers and designers, delivering web and mobile applications aligned with business objectives and project timelines.",
       "Architected and developed scalable React, Next.js, React Native, Node.js, and PostgreSQL solutions supporting e-commerce, inventory management, customer engagement, and internal operations.",
@@ -174,7 +153,7 @@ const keyAchievements: KeyAchievement[] = [
   },
   {
     icon: <Users className="h-4 w-4" />,
-    text: "Led cross-functional engineering teams of up to eight members from product conception through deployment using Agile methodologies.",
+    text: "Led cross-functional engineering teams from product conception through deployment using Agile methodologies.",
   },
   {
     icon: <Brain className="h-4 w-4" />,
@@ -184,6 +163,10 @@ const keyAchievements: KeyAchievement[] = [
     icon: <Zap className="h-4 w-4" />,
     text: "Delivered high-impact web and mobile products supporting business growth and digital transformation.",
   },
+  {
+    icon: <TrendingUp className="h-4 w-4" />,
+    text: "Improved website traffic, user engagement, and conversion rates through optimisation of marketing strategies and user experience.",
+  }
 ];
 
 // ── Color Maps ────────────────────────────────────────────────────

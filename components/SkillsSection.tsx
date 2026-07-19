@@ -481,19 +481,6 @@ export default function SkillsSection() {
           </motion.p>
         </div>
 
-        {/* Experience summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.65, ease: motionEase }}
-          className="mb-8 grid grid-cols-2 overflow-hidden rounded-2xl border border-border/70 bg-card/60 shadow-sm backdrop-blur-sm sm:grid-cols-4"
-        >
-          <SummaryStat value={`${totalSkills}+`} label="Core Skills" />
-          <SummaryStat value={`${expertSkills}+`} label="Expert Level" />
-          <SummaryStat value={`${categories.length}`} label="Specialties" />
-          <SummaryStat value="5+ yrs" label="Experience" />
-        </motion.div>
 
         {/* Skill level legend */}
         <motion.div
@@ -503,31 +490,9 @@ export default function SkillsSection() {
           transition={{ duration: 0.55, ease: motionEase }}
           className="mb-9 flex flex-wrap items-center gap-2"
         >
-          <span className="mr-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-            Proficiency:
-          </span>
+      
 
-          {levelOrder.map((level) => {
-            const config = levelConfig[level];
-
-            return (
-              <span
-                key={level}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold ${config.badge}`}
-              >
-                <span className={`flex gap-0.5 ${config.starColor}`}>
-                  {Array.from({ length: config.stars }).map((_, index) => (
-                    <Star
-                      key={index}
-                      className="h-2.5 w-2.5 fill-current"
-                      aria-hidden="true"
-                    />
-                  ))}
-                </span>
-                {config.label}
-              </span>
-            );
-          })}
+        
         </motion.div>
 
         {/* Divider */}

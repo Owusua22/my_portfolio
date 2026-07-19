@@ -34,6 +34,11 @@ export const metadata: Metadata = {
   title: "Sarah Nkansah — Full-Stack Developer & UI/UX Designer",
   description:
     "Portfolio of Sarah Nkansah, a Full-Stack Software Developer, UI/UX Designer, and Digital Solutions Specialist.",
+  icons: {
+    icon: "/logo.png",      // Update this path to match your logo file name in the public folder
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -50,7 +55,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange={false}
         >
@@ -58,7 +63,7 @@ export default function RootLayout({
             <Header />
             <TechSidebar />
             <ToolsSidebar />
-            <main className="max-w-7xl mx-auto px-6 lg:px-8 py-12 md:py-16 page-transition">
+            <main className="max-w-7xl mx-auto px-6 lg:px-8 py-2 md:py-6 page-transition">
               {children}
               <Footer />
             </main>
