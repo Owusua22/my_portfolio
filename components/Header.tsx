@@ -58,14 +58,8 @@ export default function Header() {
         isSolid ? "border-b border-indigo-500/10 dark:border-indigo-500/10" : "border-b border-transparent"
       }`}
     >
-      {/*
-        Dedicated background layer.
-        Kept as its own absolutely-positioned element instead of a background
-        utility directly on <header> — this guarantees the blur/opacity always
-        paints as a solid layer behind the nav content, regardless of how the
-        --background CSS variable is defined, and prevents scrolled content
-        from ever showing through mid-transition.
-      */}
+      
+     
       <div
         aria-hidden="true"
         className={`absolute inset-0 -z-10 bg-background backdrop-blur-2xl backdrop-saturate-150 transition-opacity duration-500 ${
@@ -202,7 +196,7 @@ export default function Header() {
                 }}
               />
               <span className="relative z-10 flex items-center gap-2 text-white">
-                Let&apos;s Work
+               Hire Me
                 <ArrowRight className="w-3.5 h-3.5 group-hover/cta:translate-x-0.5 transition-transform duration-300" />
               </span>
             </Link>

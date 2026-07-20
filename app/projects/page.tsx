@@ -5,9 +5,9 @@ import { projects } from "./projects-data";
 const siteUrl = "https://sarahnkansah.com";
 
 export const metadata: Metadata = {
-  title: "Web, Mobile & AI Development Projects | Sarah Nkansah",
+  title: "Web| Mobile App | Product Manager | Sarah Nkansah",
   description:
-    "Explore e-commerce, mobile, artificial intelligence, and cloud web applications developed by Sarah Nkansah, including Franko Trading and Cell7 AI.",
+    "Explore e-commerce, mobile app, and cloud web applications developed by Sarah Nkansah, including Franko Trading and Cell7 AI.",
   keywords: [
     "Sarah Nkansah projects",
     "Sarah Nkansah portfolio",
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     "Software developer Ghana",
     "Mobile app developer Ghana",
     "E-commerce developer Ghana",
-    "AI web application development",
+    "AI health-tech web application development",
     "Franko Trading website",
     "Franko Trading mobile app",
     "Cell7 AI",
-    "AWS Amplify developer",
+
   ],
   authors: [
     {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     locale: "en_GH",
     images: [
       {
-        url: `${siteUrl}/images/projects/projects-og.webp`,
+        url: `${siteUrl}/logo.png`,
         width: 1200,
         height: 630,
         alt: "Web, mobile and AI development projects by Sarah Nkansah",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     title: "Web, Mobile & AI Development Projects | Sarah Nkansah",
     description:
       "Explore production e-commerce, mobile, AI, and cloud applications developed by Sarah Nkansah.",
-    images: [`${siteUrl}/images/projects/projects-og.webp`],
+    images: [`${siteUrl}/logo.png`],
   },
 };
 
@@ -69,7 +69,7 @@ const structuredData = {
     "@type": "Person",
     name: "Sarah Nkansah",
     url: siteUrl,
-    jobTitle: "Full-Stack Software Developer and UI/UX Designer",
+    jobTitle: "Full-Stack Software Developer| Product Manager| SEO Specialist",
   },
   mainEntity: {
     "@type": "ItemList",

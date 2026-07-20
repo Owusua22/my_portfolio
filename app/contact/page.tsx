@@ -30,7 +30,7 @@ const socialLinks = [
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/sarahnkansah",
+    href: "https://www.linkedin.com/in/sarah-nkansah",
     icon: FaLinkedin,
     hoverClass: "hover:border-blue-500/40 hover:bg-blue-600 hover:text-white",
   },

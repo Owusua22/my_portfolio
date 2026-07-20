@@ -242,9 +242,12 @@ export default function AboutSection() {
                   transition={{ delay: 1.45 }}
                   className="flex flex-col items-center gap-3 mt-1"
                 >
+                 
+   ,
+
                   <div className="flex items-center gap-3">
-                    <SocialLink icon={<FaGithub />} href="https://github.com/sarahnkansah" />
-                    <SocialLink icon={<FaLinkedin />} href="https://linkedin.com/in/sarahnkansah" />
+                    <SocialLink icon={<FaGithub />} href= "https://github.com/Owusua22" />
+                    <SocialLink icon={<FaLinkedin />} href= "https://www.linkedin.com/in/sarah-nkansah"/>
                     <SocialLink icon={<FaXTwitter />} href="https://twitter.com/sarahnkansah" />
                   </div>
                 </motion.div>
@@ -413,7 +416,7 @@ export default function AboutSection() {
           >
             <div className="mb-10 space-y-5 text-base leading-relaxed text-foreground/80">
               <motion.p variants={narrativeItem}>
-                I&apos;m <strong className="text-foreground">Sarah Nkansah</strong>, a <strong className="text-foreground">Full-Stack Software Engineer</strong>, <strong className="text-foreground">UI/UX Designer</strong>, and <strong className="text-foreground">SEO Specialist</strong> based in Ghana. I build high performance digital products that are visually engaging, technically scalable, and strategically optimized to help businesses attract users, increase conversions, and grow online.
+                I&apos;m <strong className="text-foreground">Sarah Nkansah</strong> and an<strong className="text-foreground"> SEO Specialist</strong> based in Ghana. I build high performance digital products that are visually engaging, technically scalable, and strategically optimized to help businesses attract users, increase conversions, and grow online.
               </motion.p>
 
               <motion.p variants={narrativeItem}>

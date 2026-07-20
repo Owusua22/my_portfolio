@@ -380,7 +380,7 @@ export default function EducationSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base"
+          className="max-w-7xl text-sm leading-relaxed text-muted-foreground md:text-base"
         >
           A foundation in{" "}
           <strong className="text-foreground">business and management</strong>{" "}

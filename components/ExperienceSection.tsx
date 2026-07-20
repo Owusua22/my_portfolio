@@ -343,7 +343,7 @@ export default function ExperienceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.65, delay: 0.16, ease: "easeOut" }}
-          className="max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base"
+          className="max-w-7xl text-sm leading-relaxed text-muted-foreground md:text-base"
         >
           Over five years of experience building scalable digital products
           across e-commerce, AI health-tech, and SaaS — from software

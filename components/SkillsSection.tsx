@@ -467,7 +467,7 @@ export default function SkillsSection() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.65, delay: 0.2, ease: motionEase }}
             itemProp="description"
-            className="max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-base"
+            className="max-w-7xl text-sm leading-relaxed text-muted-foreground md:text-base"
           >
             My technical expertise spans{" "}
             <strong className="text-foreground">
