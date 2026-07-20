@@ -4,19 +4,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowRight,
   ChevronDown,
-  Code2,
+ 
   ExternalLink,
   MapPin,
   Rocket,
-  TrendingUp,
-  Zap,
 } from "lucide-react";
 import {
   motion,
   useScroll,
   useTransform,
   type Variants,
-  isMotionValue,
 } from "framer-motion";
 import ProfilePicture from "./ProfilePicture";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
@@ -26,38 +23,21 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Sarah Nkansah",
-  jobTitle: "Full-Stack Software Developer & UI/UX Designer",
+  jobTitle: "Full-Stack Software Developer | Digital Solutions Specialist | SEO Specialist ",
   description:
-    "Sarah Nkansah is a Full-Stack Software Developer, UI/UX Designer, and Digital Solutions Specialist based in Ghana.",
+    "Sarah Nkansah is a Full-Stack Software Developer, Digital Solutions Specialist, and SEO Specialist based in Ghana.",
   url: "https://sarahnkansah.com",
   sameAs: [
-    "https://github.com/sarahnkansah",
-    "https://linkedin.com/in/sarahnkansah",
+    "https://github.com/Owusua22",
+    "https://www.linkedin.com/in/sarah-nkansah",
     "https://twitter.com/sarahnkansah",
   ],
 };
 
 const smoothEase = [0.25, 0.46, 0.45, 0.94] as const;
+;
 
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.25,
-    },
-  },
-};
 
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.82 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.55, ease: smoothEase },
-  },
-};
 
 const slideInLeft: Variants = {
   hidden: { opacity: 0, x: -50 },
@@ -191,7 +171,7 @@ export default function AboutSection() {
           />
         </div>
 
-        <article itemScope itemType="https://schema.org/Person" className="mx-auto max-w-6xl px-4 sm:px-6">
+        <article itemScope itemType="https://schema.org/Person" className="mx-auto max-w-7xl px-4 sm:px-4">
           {/* Hero section */}
           <header className="relative pb-16 pt-6">
             <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:gap-16">

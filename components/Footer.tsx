@@ -9,12 +9,12 @@ import { FaXTwitter } from "react-icons/fa6";
 const socialLinks = [
   {
     name: "GitHub",
-    href: "https://github.com/sarahnkansah",
+    href: "https://github.com/Owusua22",
     icon: FaGithub,
   },
   {
     name: "LinkedIn",
-    href: "https://linkedin.com/in/sarahnkansah",
+    href: "https://www.linkedin.com/in/sarah-nkansah",
     icon: FaLinkedin,
   },
   {

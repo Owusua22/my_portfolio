@@ -7,6 +7,123 @@ import ToolsSidebar from "@/components/ToolsSidebar";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://sarahnkansah.com"),
+
+  title: {
+    default:
+      "Sarah Nkansah | Full-Stack Developer, SEO Specialist & Digital Solutions Expert",
+    template: "%s | Sarah Nkansah",
+  },
+
+  description:
+    "Sarah Nkansah is a Full-Stack Software Developer, React & Next.js Developer, SEO Specialist, and Digital Solutions Expert based in Ghana. I build high-performance websites, web applications, and scalable digital products that help businesses grow.",
+
+  keywords: [
+    "Sarah Nkansah",
+    "Full Stack Developer",
+    "Software Engineer",
+    "React Developer",
+    "Next.js Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "JavaScript Developer",
+    "TypeScript Developer",
+    "Node.js Developer",
+    "SEO Specialist",
+    "Technical SEO",
+    "Digital Marketing",
+    "Website Developer Ghana",
+    "Web Developer Ghana",
+    "Portfolio",
+    "Product Manager",
+    "UI Developer",
+    "Business Automation",
+    "Digital Solutions",
+  ],
+
+  authors: [
+    {
+      name: "Sarah Nkansah",
+      url: "https://sarahnkansah.com",
+    },
+  ],
+
+  creator: "Sarah Nkansah",
+
+  publisher: "Sarah Nkansah",
+
+  category: "Technology",
+
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
+  alternates: {
+    canonical: "https://sarahnkansah.com",
+  },
+
+  openGraph: {
+    title:
+      "Sarah Nkansah | Full-Stack Developer, SEO Specialist & Digital Solutions Expert",
+
+    description:
+      "Explore the portfolio of Sarah Nkansah—a Full-Stack Developer specializing in React, Next.js, Node.js, SEO, and scalable digital solutions.",
+
+    url: "https://sarahnkansah.com",
+
+    siteName: "Sarah Nkansah",
+
+    locale: "en_US",
+
+    type: "website",
+
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Sarah Nkansah Portfolio",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "Sarah Nkansah | Full-Stack Developer & SEO Specialist",
+
+    description:
+      "Building modern web applications with React, Next.js, Node.js, and SEO strategies that drive business growth.",
+
+    images: ["/logo.png"],
+  },
+
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
+
+  applicationName: "Sarah Nkansah Portfolio",
+
+  referrer: "origin-when-cross-origin",
+
+  verification: {
+    google: "google-site-verification=1XvLSvehYYMe3SQTth8FM__l9bgCL6NzgA3ZE1ET5No",
+  },
+};
+
 // Modern display font for headings, logo, nav
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -30,17 +147,6 @@ const mono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
-export const metadata: Metadata = {
-  title: "Sarah Nkansah — Full-Stack Developer & UI/UX Designer",
-  description:
-    "Portfolio of Sarah Nkansah, a Full-Stack Software Developer, UI/UX Designer, and Digital Solutions Specialist.",
-  icons: {
-    icon: "/logo.png",      // Update this path to match your logo file name in the public folder
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-  },
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,7 +169,7 @@ export default function RootLayout({
             <Header />
             <TechSidebar />
             <ToolsSidebar />
-            <main className="max-w-7xl mx-auto px-6 lg:px-8 py-2 md:py-6 page-transition">
+            <main className="max-w-7xl mx-auto px-6 lg:px-8 py-2 md:py-4 page-transition">
               {children}
               <Footer />
             </main>

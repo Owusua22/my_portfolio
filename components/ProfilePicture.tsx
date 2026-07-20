@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 
-const DEFAULT_IMAGE = "/sarah.png";
+const DEFAULT_IMAGE = "/Sarah.png";
 
 export default function ProfilePicture() {
   const [imageSrc, setImageSrc] = useState<string>(DEFAULT_IMAGE);

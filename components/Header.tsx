@@ -54,12 +54,27 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
-        isSolid
-          ? "bg-background/95 supports-[backdrop-filter]:bg-background/85 backdrop-blur-2xl backdrop-saturate-150 border-b border-indigo-500/10 dark:border-indigo-500/10 shadow-[0_1px_3px_rgba(99,102,241,0.04),0_4px_16px_rgba(99,102,241,0.06)] dark:shadow-[0_1px_3px_rgba(99,102,241,0.1),0_4px_16px_rgba(99,102,241,0.08)]"
-          : "bg-transparent border-b border-transparent"
+      className={`sticky top-0 z-50 w-full isolate transition-colors duration-500 ${
+        isSolid ? "border-b border-indigo-500/10 dark:border-indigo-500/10" : "border-b border-transparent"
       }`}
     >
+      {/*
+        Dedicated background layer.
+        Kept as its own absolutely-positioned element instead of a background
+        utility directly on <header> — this guarantees the blur/opacity always
+        paints as a solid layer behind the nav content, regardless of how the
+        --background CSS variable is defined, and prevents scrolled content
+        from ever showing through mid-transition.
+      */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 -z-10 bg-background backdrop-blur-2xl backdrop-saturate-150 transition-opacity duration-500 ${
+          isSolid
+            ? "opacity-95 shadow-[0_1px_3px_rgba(99,102,241,0.04),0_4px_16px_rgba(99,102,241,0.06)] dark:shadow-[0_1px_3px_rgba(99,102,241,0.1),0_4px_16px_rgba(99,102,241,0.08)]"
+            : "opacity-0"
+        }`}
+      />
+
       {/* Subtle gradient line at top */}
       <div
         className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent transition-opacity duration-500 ${
