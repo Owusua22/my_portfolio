@@ -23,15 +23,15 @@ const TESTIMONIALS = [
     image: "/assets/img/person/peron5.jpg",
     name: "Mary Dickson",
     role: "CEO, Wemomprenuers",
-    project: "Brand & Social Design System",
+   
   },
   {
     quote:
       "We had built AI models that predict disease risk years before symptoms appear, but our website read like a research paper and scared off every clinician who landed on it. Sarah rebuilt the positioning, the page architecture, and the demo request flow from the ground up. She translated dense health-tech jargon into language that investors and hospital administrators actually understand. Within the first month the Tally-powered demo form was generating qualified leads. The site went from our weakest asset to our strongest sales tool.",
-    image: "/assets/img/person/josh.png",
+    image: "/assets/img/person/josh.jpg",
     name: "Joshua Fordjour",
     role: "CEO, Cell-7 AI",
-    project: "Product Website & Lead Capture",
+  
   },
 ];
 
@@ -298,7 +298,7 @@ export default function Testimonials() {
                           flexShrink: 0,
                         }}
                       >
-                        {t.project}
+                      
                       </span>
                     </div>
                   </div>
