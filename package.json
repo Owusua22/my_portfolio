@@ -1,32 +1,39 @@
 {
-  "name": "portfolio",
-  "version": "0.1.0",
+  "name": "sarah-nkansah-portfolio-static",
+  "version": "2.0.0",
   "private": true,
+  "description": "Sarah Nkansah — Digital Marketing & Full-Stack Web Developer Portfolio (100% client-side, no SSR)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "export": "next build"
   },
   "dependencies": {
-    "@gsap/react": "^2.1.2",
-    "framer-motion": "^12.42.2",
-    "lucide-react": "^1.24.0",
-    "next": "16.2.10",
-    "next-themes": "^0.4.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-icons": "^5.7.0"
+    "aos": "^2.3.4",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "glightbox": "^3.3.0",
+    "imagesloaded": "^5.0.0",
+    "isotope-layout": "^3.0.6",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.7.0",
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "autoprefixer": "^10.5.2",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.10",
-    "postcss": "^8.5.17",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/aos": "^3.0.7",
+    "@types/node": "^20.16.11",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.6.1",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "postcss": "^8.5.30",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.6.3"
   }
 }

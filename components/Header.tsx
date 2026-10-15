@@ -1,330 +1,801 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import ThemeToggle from "./ThemeToggle";
-import { useState, useEffect, useRef } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useScrollspy from "@/hooks/useScrollspy";
 
-export default function Header() {
-  const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
+/* ------------------------------------------------------------------ */
+/*  Tokens & data                                                      */
+/* ------------------------------------------------------------------ */
+const ACCENT = "#f97316";
+const ACCENT_DARK = "#ea580c";
+const INK = "#0f2f2a";
+const MUTED = "#4b625d";
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+const CV_URL =
+  "https://docs.google.com/document/d/10CZgm5_UpRXNiH0FDcQG873euCqdITG4srnvXjzU-RY/edit?usp=sharing";
+const LINKEDIN_URL = "https://www.linkedin.com/in/sarah-nkansah";
+const GITHUB_URL = "https://github.com/Owusua22";
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
+const SECTION_LINKS = [
+  { href: "#hero",      label: "Home",     icon: "bi-house-door" },
+  { href: "#about",     label: "About",    icon: "bi-person" },
+  { href: "#services",  label: "Services", icon: "bi-briefcase" },
+  { href: "#portfolio", label: "Projects", icon: "bi-grid" },
+  { href: "#contact",   label: "Contact",  icon: "bi-chat-dots" },
+];
 
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileMenuOpen]);
+/* ------------------------------------------------------------------ */
+/*  Layout CSS – media queries decide layout on the FIRST paint        */
+/* ------------------------------------------------------------------ */
+const LAYOUT_CSS = `
+  :root { --hdr-h: 72px; }
+  .hdr-nav, .hdr-cta, .hdr-tagline, .hdr-socials { display: flex; }
+  .hdr-burger, .hdr-drawer, .hdr-backdrop { display: none; }
+  .hdr-cta-long { display: inline; }
+  .hdr-cta-short { display: none; }
 
-  const navLinks = [
-    { href: "/", label: "About" },
-    { href: "/projects", label: "Projects" },
-    { href: "/contact", label: "Contact" },
-  ];
+  @media (max-width: 1199.98px) {
+    .hdr-cta-long { display: none; }
+    .hdr-cta-short { display: inline; }
+  }
+  @media (max-width: 991.98px) {
+    .hdr-nav, .hdr-socials { display: none !important; }
+    .hdr-burger { display: grid; }
+    .hdr-drawer { display: flex; }
+    .hdr-backdrop { display: block; }
+    .hdr-cta-long { display: inline; }
+    .hdr-cta-short { display: none; }
+  }
+  @media (max-width: 575.98px) {
+    :root { --hdr-h: 64px; }
+    .hdr-cta, .hdr-tagline { display: none; }
+    .hdr-logo { width: 38px !important; height: 38px !important; }
+    .hdr-name { font-size: 15px !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hdr-anim { transition: none !important; animation: none !important; }
+  }
+`;
 
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
-
-  const isSolid = scrolled || mobileMenuOpen;
+/* ------------------------------------------------------------------ */
+/*  Desktop Social Icon Button                                         */
+/* ------------------------------------------------------------------ */
+function HeaderSocialBtn({
+  href,
+  icon,
+  label,
+  hoverColor,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+  hoverColor: string;
+}) {
+  const [hover, setHover] = useState(false);
 
   return (
-    <header
-      ref={headerRef}
-      className={`sticky top-0 z-50 w-full isolate transition-colors duration-500 ${
-        isSolid ? "border-b border-indigo-500/10 dark:border-indigo-500/10" : "border-b border-transparent"
-      }`}
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+      className="hdr-anim"
+      style={{
+        width: 40,
+        height: 40,
+        display: "grid",
+        placeItems: "center",
+        borderRadius: 12,
+        border: `1px solid ${hover ? hoverColor : "rgba(15,47,42,0.12)"}`,
+        background: hover ? "rgba(15,47,42,0.04)" : "rgba(255,255,255,0.8)",
+        color: hover ? hoverColor : INK,
+        fontSize: 18,
+        textDecoration: "none",
+        boxShadow: hover ? "0 4px 12px rgba(0,0,0,0.08)" : "none",
+        transform: hover ? "translateY(-2px)" : "none",
+        transition: "all .2s ease",
+        outline: "none",
+      }}
     >
-      
-     
-      <div
-        aria-hidden="true"
-        className={`absolute inset-0 -z-10 bg-background backdrop-blur-2xl backdrop-saturate-150 transition-opacity duration-500 ${
-          isSolid
-            ? "opacity-95 shadow-[0_1px_3px_rgba(99,102,241,0.04),0_4px_16px_rgba(99,102,241,0.06)] dark:shadow-[0_1px_3px_rgba(99,102,241,0.1),0_4px_16px_rgba(99,102,241,0.08)]"
-            : "opacity-0"
-        }`}
-      />
+      <i className={`bi ${icon}`} />
+    </a>
+  );
+}
 
-      {/* Subtle gradient line at top */}
-      <div
-        className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/40 to-transparent transition-opacity duration-500 ${
-          isSolid ? "opacity-100" : "opacity-0"
-        }`}
-      />
+/* ------------------------------------------------------------------ */
+/*  Desktop nav pill                                                   */
+/* ------------------------------------------------------------------ */
+function NavPill({
+  href,
+  label,
+  active,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const [hover, setHover] = useState(false);
+  return (
+    <li>
+      <Link
+        href={href}
+        onClick={onClick}
+        aria-current={active ? "page" : undefined}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onFocus={() => setHover(true)}
+        onBlur={() => setHover(false)}
+        className="hdr-anim"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          padding: "9px 16px",
+          borderRadius: 999,
+          fontSize: 14,
+          fontWeight: active ? 700 : 600,
+          color: active ? "#fff" : hover ? ACCENT : INK,
+          background: active
+            ? `linear-gradient(135deg, ${ACCENT}, #fb923c)`
+            : hover
+            ? "rgba(249,115,22,0.10)"
+            : "transparent",
+          boxShadow: active ? "0 8px 18px rgba(249,115,22,0.30)" : "none",
+          textDecoration: "none",
+          whiteSpace: "nowrap",
+          outline: "none",
+          transition: "all .25s ease",
+        }}
+      >
+        {label}
+      </Link>
+    </li>
+  );
+}
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[72px] py-3">
-          {/* ==================== LOGO ==================== */}
+/* ------------------------------------------------------------------ */
+/*  Drawer link                                                        */
+/* ------------------------------------------------------------------ */
+function DrawerLink({
+  href,
+  label,
+  icon,
+  index,
+  active,
+  open,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  icon: string;
+  index: number;
+  active: boolean;
+  open: boolean;
+  onClick: () => void;
+}) {
+  const [hover, setHover] = useState(false);
+  const lit = active || hover;
+  const delay = open ? 50 + index * 30 : 0;
+  return (
+    <li>
+      <Link
+        href={href}
+        onClick={onClick}
+        aria-current={active ? "page" : undefined}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        className="hdr-anim"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          minHeight: 48,
+          padding: "0 12px 0 14px",
+          borderRadius: 14,
+          background: active
+            ? "rgba(249,115,22,0.08)"
+            : hover
+            ? "rgba(15,47,42,0.04)"
+            : "transparent",
+          border: `1px solid ${active ? "rgba(249,115,22,0.20)" : "transparent"}`,
+          color: INK,
+          textDecoration: "none",
+          opacity: open ? 1 : 0,
+          transform: open ? "translateX(0)" : "translateX(16px)",
+          transition: `opacity .25s ease ${delay}ms, transform .25s ease ${delay}ms, background .2s ease`,
+        }}
+      >
+        <span
+          aria-hidden="true"
+          className="hdr-anim"
+          style={{
+            width: 36,
+            height: 36,
+            display: "grid",
+            placeItems: "center",
+            borderRadius: 10,
+            fontSize: 15,
+            color: lit ? "#fff" : INK,
+            background: lit
+              ? `linear-gradient(135deg, ${ACCENT}, #fb923c)`
+              : "rgba(15,47,42,0.05)",
+            boxShadow: lit ? "0 6px 14px rgba(249,115,22,0.20)" : "none",
+            transition: "all .25s ease",
+            flexShrink: 0,
+          }}
+        >
+          <i className={`bi ${icon}`} />
+        </span>
+        <span
+          style={{
+            flex: 1,
+            minWidth: 0,
+            fontSize: 14.5,
+            fontWeight: active ? 800 : 600,
+            color: active ? ACCENT : INK,
+            lineHeight: 1.2,
+          }}
+        >
+          {label}
+        </span>
+        <i
+          className="bi bi-chevron-right"
+          aria-hidden="true"
+          style={{ fontSize: 11, color: active ? ACCENT : MUTED }}
+        />
+      </Link>
+    </li>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Header                                                             */
+/* ------------------------------------------------------------------ */
+export default function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [ctaHover, setCtaHover] = useState(false);
+  const [burgerHover, setBurgerHover] = useState(false);
+  const [closeHover, setCloseHover] = useState(false);
+  const [liHover, setLiHover] = useState(false);
+  const [ghHover, setGhHover] = useState(false);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  const activeSection = useScrollspy(isHome ? SECTION_LINKS.map((l) => l.href) : []);
+  const active = activeSection || "#hero";
+  const sectionHref = (hash: string) => (isHome ? hash : `/${hash}`);
+  const close = useCallback(() => setOpen(false), []);
+
+  /* scroll: glass + progress */
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setScrolled(y > 24);
+      setProgress(max > 0 ? Math.min(100, (y / max) * 100) : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* drawer: body lock, esc, focus, close on desktop resize */
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) setTimeout(() => closeBtnRef.current?.focus(), 60);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const mq = window.matchMedia("(min-width: 992px)");
+    const onMq = (e: MediaQueryListEvent) => e.matches && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onMq);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onMq);
+    };
+  }, [open]);
+
+  useEffect(() => setOpen(false), [pathname]);
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: LAYOUT_CSS }} />
+
+      <header
+        id="header"
+        className="hdr-anim"
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+          height: "var(--hdr-h)",
+          background: scrolled || open ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.72)",
+          backdropFilter: "blur(16px) saturate(160%)",
+          WebkitBackdropFilter: "blur(16px) saturate(160%)",
+          borderBottom: `1px solid rgba(15,47,42,${scrolled ? 0.12 : 0.05})`,
+          boxShadow: scrolled ? "0 10px 30px rgba(15,47,42,0.05)" : "none",
+          transition: "background .3s ease, box-shadow .3s ease, border-color .3s ease",
+        }}
+      >
+        <div
+          className="container-fluid container-xl"
+          style={{
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          {/* ---------- Brand ---------- */}
           <Link
             href="/"
-            className="flex items-center gap-3.5 group relative"
-            aria-label="Sarah Nkansah - Home"
+            onClick={close}
+            aria-label="Sarah Nkansah – home"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              textDecoration: "none",
+              minWidth: 0,
+            }}
           >
-            <div className="relative">
-              <div
-                className="absolute -inset-2 bg-gradient-to-tr from-indigo-500/30 via-purple-500/20 to-cyan-500/30 
-                            rounded-2xl opacity-0 group-hover:opacity-100 blur-lg transition-all duration-700"
+            <span
+              className="hdr-logo"
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: 12,
+                padding: 2,
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT_DARK})`,
+                flexShrink: 0,
+              }}
+            >
+              <img
+                src="/sn_logo.png"
+                alt=""
+                width={38}
+                height={38}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 10,
+                  objectFit: "cover",
+                  background: "#fff",
+                  display: "block",
+                }}
               />
-              <div
-                className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 
-                            opacity-0 group-hover:opacity-30 transition-opacity duration-500 animate-spin-slow"
-              />
-              <div
-                className="relative w-11 h-11 overflow-hidden rounded-xl 
-                           bg-gradient-to-br from-indigo-500/5 to-purple-500/5 
-                           dark:from-indigo-500/10 dark:to-purple-500/10
-                           border border-indigo-500/10 dark:border-indigo-500/20
-                           group-hover:border-indigo-500/30 
-                           group-hover:shadow-lg group-hover:shadow-indigo-500/10
-                           transition-all duration-500 group-hover:rotate-3"
-              >
-                <Image
-                  src="/logo.png"
-                  alt="Sarah Nkansah Logo"
-                  fill
-                  sizes="44px"
-                  className="object-contain p-1 transition-transform duration-500 group-hover:scale-110"
-                  priority
-                />
-              </div>
-            </div>
-
-            <div className="hidden sm:flex flex-col leading-none">
+            </span>
+            <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.1, minWidth: 0 }}>
               <span
-                className="font-display text-base font-semibold text-foreground tracking-tight
-                           group-hover:tracking-normal transition-all duration-300"
+                className="hdr-name"
+                style={{
+                  fontSize: 17,
+                  fontWeight: 900,
+                  letterSpacing: "-0.02em",
+                  color: INK,
+                  whiteSpace: "nowrap",
+                }}
               >
                 Sarah Nkansah
               </span>
               <span
-                className="font-sans text-[10px] font-medium text-muted-foreground uppercase 
-                           tracking-[0.2em] mt-1.5 flex items-center gap-1.5"
+                className="hdr-tagline"
+                style={{
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase",
+                  color: ACCENT,
+                  marginTop: 3,
+                }}
               >
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-                </span>
-                <span className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent font-semibold">
-                  FullStack Developer
-                </span>
+                FullStack Developer
               </span>
-            </div>
+            </span>
           </Link>
 
-          {/* ==================== DESKTOP NAV ==================== */}
-          <nav className="hidden md:flex items-center gap-2">
-            <div
-              className="flex items-center gap-1 p-1.5 rounded-full 
-                         bg-indigo-500/[0.04] dark:bg-indigo-500/[0.08]
-                         border border-indigo-500/10 dark:border-indigo-500/15
-                         backdrop-blur-sm"
+          {/* ---------- Desktop nav (CSS-hidden < 992px) ---------- */}
+          <nav aria-label="Primary" className="hdr-nav">
+            <ul
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                margin: 0,
+                padding: 4,
+                listStyle: "none",
+                borderRadius: 999,
+                background: "rgba(15,47,42,0.04)",
+                border: "1px solid rgba(15,47,42,0.08)",
+              }}
             >
-              {navLinks.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`relative px-5 py-2 text-sm font-medium rounded-full 
-                      transition-all duration-300 font-display tracking-tight
-                      ${
-                        active
-                          ? "text-white"
-                          : "text-muted-foreground hover:text-foreground hover:bg-indigo-500/5"
-                      }`}
-                  >
-                    {active && (
-                      <span
-                        className="absolute inset-0 rounded-full -z-10
-                                   bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 
-                                   bg-[length:200%_100%] animate-gradient-x
-                                   shadow-lg shadow-indigo-500/25"
-                      />
-                    )}
-                    <span className="relative z-10">{link.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div className="w-px h-6 bg-gradient-to-b from-transparent via-indigo-500/20 to-transparent mx-2" />
-
-            <ThemeToggle />
-
-            <Link
-              href="/contact"
-              className="group/cta relative ml-2 overflow-hidden px-6 py-2.5 rounded-full
-                         text-sm font-display font-bold tracking-tight
-                         transition-all duration-500 hover:scale-105 
-                         hover:shadow-2xl hover:shadow-indigo-500/25"
-            >
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 
-                           bg-[length:200%_100%] animate-gradient-x"
-              />
-              <div
-                className="absolute inset-0 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-500"
-                style={{
-                  background:
-                    "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)",
-                  backgroundSize: "200% 100%",
-                  animation: "shine 1.5s ease-in-out",
-                }}
-              />
-              <span className="relative z-10 flex items-center gap-2 text-white">
-               Hire Me
-                <ArrowRight className="w-3.5 h-3.5 group-hover/cta:translate-x-0.5 transition-transform duration-300" />
-              </span>
-            </Link>
+              {SECTION_LINKS.map((l) => (
+                <NavPill
+                  key={l.href}
+                  href={sectionHref(l.href)}
+                  label={l.label}
+                  active={active === l.href}
+                  onClick={close}
+                />
+              ))}
+            </ul>
           </nav>
 
-          {/* ==================== MOBILE CONTROLS ==================== */}
-          <div className="flex items-center gap-3 md:hidden">
-            <ThemeToggle />
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`relative w-11 h-11 flex items-center justify-center rounded-full 
-                         border transition-all duration-500 overflow-hidden
-                         ${
-                           mobileMenuOpen
-                             ? "bg-gradient-to-r from-indigo-600 to-purple-600 border-indigo-500/30 text-white shadow-lg shadow-indigo-500/25"
-                             : "bg-indigo-500/5 dark:bg-indigo-500/10 border-indigo-500/10 dark:border-indigo-500/20 text-foreground hover:border-indigo-500/30 hover:bg-indigo-500/10"
-                         }`}
-              aria-label="Toggle menu"
+          {/* ---------- Right controls ---------- */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            {/* Social Icons for Large Screens (GitHub & LinkedIn) */}
+            <div className="hdr-socials" style={{ alignItems: "center", gap: 8 }}>
+              <HeaderSocialBtn
+                href={GITHUB_URL}
+                icon="bi-github"
+                label="Sarah Nkansah on GitHub"
+                hoverColor="#181717"
+              />
+              <HeaderSocialBtn
+                href={LINKEDIN_URL}
+                icon="bi-linkedin"
+                label="Sarah Nkansah on LinkedIn"
+                hoverColor="#0A66C2"
+              />
+            </div>
+
+            {/* Download CV CTA */}
+            <a
+              href={CV_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Download Sarah Nkansah's CV"
+              className="hdr-cta hdr-anim"
+              onMouseEnter={() => setCtaHover(true)}
+              onMouseLeave={() => setCtaHover(false)}
+              onFocus={() => setCtaHover(true)}
+              onBlur={() => setCtaHover(false)}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                height: 42,
+                padding: "0 18px",
+                borderRadius: 999,
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#fff",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                background: ctaHover
+                  ? `linear-gradient(135deg, ${ACCENT_DARK}, ${ACCENT})`
+                  : `linear-gradient(135deg, ${ACCENT}, #fb923c)`,
+                boxShadow: ctaHover
+                  ? "0 14px 28px rgba(249,115,22,0.38)"
+                  : "0 8px 20px rgba(249,115,22,0.28)",
+                transform: ctaHover ? "translateY(-2px)" : "none",
+                transition: "all .25s ease",
+                outline: "none",
+              }}
             >
-              <div className="relative w-5 h-5">
-                <Menu
-                  className={`absolute inset-0 w-5 h-5 transition-all duration-300 ${
-                    mobileMenuOpen
-                      ? "opacity-0 rotate-90 scale-0"
-                      : "opacity-100 rotate-0 scale-100"
-                  }`}
-                />
-                <X
-                  className={`absolute inset-0 w-5 h-5 transition-all duration-300 ${
-                    mobileMenuOpen
-                      ? "opacity-100 rotate-0 scale-100"
-                      : "opacity-0 -rotate-90 scale-0"
-                  }`}
-                />
-              </div>
+              <i className="bi bi-download" aria-hidden="true" style={{ fontSize: 14 }} />
+              <span className="hdr-cta-long">Download CV</span>
+              <span className="hdr-cta-short">CV</span>
+            </a>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              type="button"
+              className="hdr-burger hdr-anim"
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-drawer"
+              onClick={() => setOpen((o) => !o)}
+              onMouseEnter={() => setBurgerHover(true)}
+              onMouseLeave={() => setBurgerHover(false)}
+              style={{
+                position: "relative",
+                width: 44,
+                height: 44,
+                placeItems: "center",
+                padding: 0,
+                borderRadius: 14,
+                border: `1px solid ${open ? ACCENT : "rgba(15,47,42,0.12)"}`,
+                background: open
+                  ? "rgba(249,115,22,0.08)"
+                  : burgerHover
+                  ? "rgba(15,47,42,0.05)"
+                  : "#fff",
+                cursor: "pointer",
+                zIndex: 1102,
+                transition: "all .25s ease",
+              }}
+            >
+              <span style={{ position: "relative", width: 20, height: 14, display: "block" }}>
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    aria-hidden="true"
+                    className="hdr-anim"
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: i === 0 ? 0 : i === 1 ? 6 : 12,
+                      width: i === 1 && !open ? 14 : 20,
+                      height: 2.2,
+                      borderRadius: 2,
+                      background: open ? ACCENT : INK,
+                      opacity: i === 1 && open ? 0 : 1,
+                      transform: open
+                        ? i === 0
+                          ? "translateY(6px) rotate(45deg)"
+                          : i === 2
+                          ? "translateY(-6px) rotate(-45deg)"
+                          : "none"
+                        : "none",
+                      transition: "all .3s cubic-bezier(.4,0,.2,1)",
+                    }}
+                  />
+                ))}
+              </span>
             </button>
           </div>
         </div>
 
-        {/* ==================== MOBILE MENU ==================== */}
+        {/* Scroll Progress Bar */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
-            mobileMenuOpen ? "max-h-[420px] opacity-100 pb-8" : "max-h-0 opacity-0"
-          }`}
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: -1,
+            height: 3,
+            width: `${progress}%`,
+            background: `linear-gradient(90deg, ${ACCENT}, #fb923c 60%, ${ACCENT_DARK})`,
+            borderRadius: "0 3px 3px 0",
+            boxShadow: progress > 0 ? "0 0 10px rgba(249,115,22,0.4)" : "none",
+          }}
+        />
+      </header>
+
+      {/* ---------- Backdrop (CSS-hidden ≥ 992px) ---------- */}
+      <div
+        onClick={close}
+        aria-hidden="true"
+        className="hdr-backdrop hdr-anim"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1100,
+          background: "rgba(15,47,42,0.4)",
+          backdropFilter: "blur(4px)",
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity .3s ease",
+        }}
+      />
+
+      {/* ---------- Mobile Drawer (CSS-hidden ≥ 992px) ---------- */}
+      <div
+        id="mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
+        aria-hidden={!open}
+        className="hdr-drawer hdr-anim"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 1101,
+          width: "min(82vw, 320px)",
+          flexDirection: "column",
+          background: "#fff",
+          boxShadow: open ? "-15px 0 50px rgba(15,47,42,0.15)" : "none",
+          transform: open ? "translateX(0)" : "translateX(105%)",
+          visibility: open ? "visible" : "hidden",
+          transition:
+            "transform .35s cubic-bezier(.4,0,.2,1), visibility 0s linear " +
+            (open ? "0s" : ".35s"),
+          overflowY: "auto",
+          overscrollBehavior: "contain",
+        }}
+      >
+        {/* Drawer Header */}
+        <div
+          style={{
+            height: "var(--hdr-h)",
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "0 12px 0 16px",
+            borderBottom: "1px solid rgba(15,47,42,0.08)",
+          }}
         >
-          <nav className="pt-4 space-y-2">
-            <div className="h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent mb-4" />
+          <span style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+            <img
+              src="/sn_logo.png"
+              alt=""
+              width={32}
+              height={32}
+              style={{ width: 32, height: 32, borderRadius: 9, objectFit: "cover", flexShrink: 0 }}
+            />
+            <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
+              <span style={{ fontSize: 14, fontWeight: 800, letterSpacing: "-0.02em", color: INK }}>
+                Sarah Nkansah
+              </span>
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: "0.10em",
+                  textTransform: "uppercase",
+                  color: ACCENT,
+                  marginTop: 2,
+                }}
+              >
+                FullStack Developer
+              </span>
+            </span>
+          </span>
 
-            {navLinks.map((link, index) => {
-              const active = isActive(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`relative flex items-center justify-between py-4 px-5 text-sm font-medium 
-                    font-display tracking-tight rounded-2xl transition-all duration-300 overflow-hidden
-                    ${
-                      active
-                        ? "text-white shadow-lg shadow-indigo-500/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-indigo-500/5 dark:hover:bg-indigo-500/10"
-                    }`}
-                  style={{
-                    transitionDelay: mobileMenuOpen ? `${index * 60}ms` : "0ms",
-                    transform: mobileMenuOpen ? "translateX(0)" : "translateX(-12px)",
-                    opacity: mobileMenuOpen ? 1 : 0,
-                  }}
-                >
-                  {active && (
-                    <div
-                      className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 
-                                 bg-[length:200%_100%] animate-gradient-x -z-10"
-                    />
-                  )}
+          <button
+            ref={closeBtnRef}
+            type="button"
+            onClick={close}
+            aria-label="Close menu"
+            className="hdr-anim"
+            onMouseEnter={() => setCloseHover(true)}
+            onMouseLeave={() => setCloseHover(false)}
+            style={{
+              width: 40,
+              height: 40,
+              display: "grid",
+              placeItems: "center",
+              padding: 0,
+              borderRadius: 12,
+              border: `1px solid ${closeHover ? ACCENT : "rgba(249,115,22,0.30)"}`,
+              background: closeHover ? ACCENT : "rgba(249,115,22,0.08)",
+              color: closeHover ? "#fff" : ACCENT,
+              fontSize: 15,
+              cursor: "pointer",
+              transition: "all .2s ease",
+            }}
+          >
+            <i className="bi bi-x-lg" aria-hidden="true" />
+          </button>
+        </div>
 
-                  <span className="flex items-center gap-3">
-                    {active && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/80 animate-pulse" />
-                    )}
-                    {link.label}
-                  </span>
+        {/* Links */}
+        <nav aria-label="Mobile primary" style={{ padding: "10px 10px 4px", flex: 1 }}>
+          <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 3 }}>
+            {SECTION_LINKS.map((l, i) => (
+              <DrawerLink
+                key={l.href}
+                href={sectionHref(l.href)}
+                label={l.label}
+                icon={l.icon}
+                index={i}
+                active={active === l.href}
+                open={open}
+                onClick={close}
+              />
+            ))}
+          </ul>
+        </nav>
 
-                  <ArrowRight
-                    className={`w-4 h-4 transition-all duration-300 ${
-                      active
-                        ? "opacity-100 translate-x-0 text-white/80"
-                        : "opacity-0 -translate-x-2"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
+        {/* Drawer Footer with CV & Both Social Profiles */}
+        <div
+          className="hdr-anim"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            padding: "12px 14px calc(14px + env(safe-area-inset-bottom))",
+            borderTop: "1px solid rgba(15,47,42,0.08)",
+            background: "linear-gradient(180deg, #ffffff, #fff7f0)",
+            opacity: open ? 1 : 0,
+            transform: open ? "translateY(0)" : "translateY(12px)",
+            transition: `all .35s ease ${open ? 260 : 0}ms`,
+          }}
+        >
+          {/* CV Button */}
+          <a
+            href={CV_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={close}
+            aria-label="Download Sarah Nkansah's CV"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              height: 44,
+              borderRadius: 999,
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#fff",
+              textDecoration: "none",
+              background: `linear-gradient(135deg, ${ACCENT}, #fb923c)`,
+              boxShadow: "0 8px 20px rgba(249,115,22,0.25)",
+            }}
+          >
+            <i className="bi bi-download" aria-hidden="true" />
+            Download CV
+          </a>
 
-            <div
-              className="pt-4"
+          {/* Social Links Row on Mobile */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            {/* GitHub */}
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sarah Nkansah's GitHub"
+              className="hdr-anim"
+              onMouseEnter={() => setGhHover(true)}
+              onMouseLeave={() => setGhHover(false)}
               style={{
-                transitionDelay: mobileMenuOpen ? "200ms" : "0ms",
-                transform: mobileMenuOpen ? "translateY(0)" : "translateY(8px)",
-                opacity: mobileMenuOpen ? 1 : 0,
-                transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                height: 42,
+                borderRadius: 12,
+                fontSize: 13,
+                fontWeight: 700,
+                color: ghHover ? "#fff" : INK,
+                textDecoration: "none",
+                background: ghHover ? "#181717" : "#fff",
+                border: `1.5px solid ${ghHover ? "#181717" : "rgba(15,47,42,0.14)"}`,
+                transition: "all .2s ease",
               }}
             >
-              <Link
-                href="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="relative flex items-center justify-center gap-2.5 py-4 px-5 
-                           text-sm font-bold rounded-2xl font-display tracking-tight
-                           text-white overflow-hidden
-                           shadow-lg shadow-indigo-500/20
-                           active:scale-[0.98] transition-transform duration-150"
-              >
-                <div
-                  className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 
-                             bg-[length:200%_100%] animate-gradient-x -z-10"
-                />
-                <span>Hire me</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+              <i className="bi bi-github" aria-hidden="true" style={{ fontSize: 16 }} />
+              GitHub
+            </a>
 
-            <div className="flex items-center justify-center gap-2 pt-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-indigo-500/10" />
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500/20" />
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-indigo-500/10" />
-            </div>
-          </nav>
+            {/* LinkedIn */}
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sarah Nkansah on LinkedIn"
+              className="hdr-anim"
+              onMouseEnter={() => setLiHover(true)}
+              onMouseLeave={() => setLiHover(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                height: 42,
+                borderRadius: 12,
+                fontSize: 13,
+                fontWeight: 700,
+                color: liHover ? "#fff" : INK,
+                textDecoration: "none",
+                background: liHover ? "#0A66C2" : "#fff",
+                border: `1.5px solid ${liHover ? "#0A66C2" : "rgba(15,47,42,0.14)"}`,
+                transition: "all .2s ease",
+              }}
+            >
+              <i className="bi bi-linkedin" aria-hidden="true" style={{ fontSize: 16, color: liHover ? "#fff" : "#0A66C2" }} />
+              LinkedIn
+            </a>
+          </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }
