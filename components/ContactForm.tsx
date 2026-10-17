@@ -144,9 +144,7 @@ export default function ContactForm() {
           >
             {status === "loading" ? "Sending..." : "Send Message"}
           </button>
-          <p className="small text-muted mt-2 mb-0">
-            Static front-end demo — no server required. Your message is kept in this browser only.
-          </p>
+         
         </div>
       </div>
     </form>
